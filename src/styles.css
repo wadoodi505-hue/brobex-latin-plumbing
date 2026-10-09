@@ -61,6 +61,11 @@
   --primary-foreground: #10100F;
   --brass: #C6A56B;
   --brass-soft: #E1C794;
+  --gold-accent: #C5A059;
+  --champagne-accent: #D8C18A;
+  --sage: #A3B49A;
+  --leaf-green: #527A52;
+  --forest-green: #244B38;
   --copper: #9A7A4A;
   --secondary: #292824;
   --secondary-foreground: #F4F0E8;
@@ -597,4 +602,51 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+
+/* BROBEX Ars Aquae: restrained botanical accents for the existing obsidian/brass identity. */
+@layer utilities {
+  .text-sage { color: var(--sage); }
+  .bg-sage\/10 { background-color: color-mix(in srgb, var(--sage) 10%, transparent); }
+  .bg-sage\/15 { background-color: color-mix(in srgb, var(--sage) 15%, transparent); }
+  .border-sage\/50 { border-color: color-mix(in srgb, var(--sage) 50%, transparent); }
+}
+
+@layer components {
+  .service-catalog-card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(38, 42, 35, 0.72), rgba(25, 25, 23, 0.96));
+    border-color: rgba(244, 240, 232, 0.10);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+    transition: transform 420ms var(--ease-lux), border-color 420ms var(--ease-lux), box-shadow 420ms var(--ease-lux), background 420ms var(--ease-lux);
+  }
+  .service-catalog-card::after {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 2px;
+    background: linear-gradient(180deg, var(--champagne-accent), var(--leaf-green));
+    transform: scaleY(0); transform-origin: bottom; transition: transform 420ms var(--ease-lux);
+  }
+  .service-catalog-card:hover, .service-catalog-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(163, 180, 154, 0.42);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(82, 122, 82, 0.08);
+  }
+  .service-catalog-card:hover::after, .service-catalog-card:focus-visible::after, .service-catalog-card-active::after { transform: scaleY(1); }
+  .service-catalog-card-active {
+    border-color: rgba(197, 160, 89, 0.56);
+    background: linear-gradient(145deg, rgba(82, 122, 82, 0.13), rgba(25, 25, 23, 0.98) 70%);
+    box-shadow: inset 0 0 0 1px rgba(197, 160, 89, 0.08);
+  }
+  .service-current-label {
+    border: 1px solid rgba(163, 180, 154, 0.35);
+    border-radius: 999px; padding: 0.32rem 0.55rem;
+    color: var(--sage); background: rgba(82, 122, 82, 0.12);
+    font-size: 0.58rem; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-catalog-card, .service-catalog-card::after { transition: none; }
+  .service-catalog-card:hover, .service-catalog-card:focus-visible { transform: none; }
 }

@@ -35,7 +35,8 @@ export const Route = createFileRoute("/services/$slug")({
 function ServiceDetail() {
   const { slug } = Route.useLoaderData();
   const service = getService(slug)!;
-  const others = SERVICES.filter((s) => s.slug !== slug).slice(0, 3);
+  // Always render the full canonical service catalogue on every detail route.
+  const catalogue = SERVICES;
 
   return (
     <SiteLayout>
@@ -127,36 +128,41 @@ function ServiceDetail() {
       <section className="relative pb-24 lg:pb-32">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <p className="eyebrow">Alia officia</p>
+            <p className="eyebrow">Catalogus plenus</p>
             <h2 className="mt-4 text-3xl sm:text-4xl">
-              Saepe necessarium <span className="text-metal">saepe cum hoc</span>
+              Explora omnia <span className="text-metal">officia nostra</span>
             </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Omnia officia aquarum et calefactionis uno loco. Elige opus quod domui tuae convenit.
+            </p>
           </Reveal>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {others.map((other, i) => (
-              <Reveal key={other.slug} delay={i * 90} className="h-full">
-                <Link
-                  to="/services/$slug"
-                  params={{ slug: other.slug }}
-                  className="lux-card group flex h-full flex-col rounded-2xl p-7"
-                >
-                  <span className="grid h-11 w-11 place-items-center rounded-xl border border-brass/30 bg-brass/10 text-brass">
-                    <other.icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <h3 className="mt-5 text-xl">{other.title}</h3>
-                  <p className="mt-2.5 flex-1 text-sm leading-relaxed text-muted-foreground">
-                    {other.text}
-                  </p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-[0.7rem] font-semibold tracking-[0.2em] uppercase text-brass-soft">
-                    Singula vide
-                    <ArrowUpRight
-                      className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </Link>
-              </Reveal>
-            ))}
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {catalogue.map((item, i) => {
+              const isCurrent = item.slug === slug;
+              return (
+                <Reveal key={item.slug} delay={(i % 4) * 65} className="h-full">
+                  <Link
+                    to="/services/$slug"
+                    params={{ slug: item.slug }}
+                    aria-current={isCurrent ? "page" : undefined}
+                    className={`service-catalog-card group flex h-full flex-col rounded-2xl border p-6 transition-all duration-500 ${isCurrent ? "service-catalog-card-active" : "border-border/70"}`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl border transition-colors duration-300 ${isCurrent ? "border-sage/50 bg-sage/15 text-sage" : "border-brass/30 bg-brass/10 text-brass group-hover:border-sage/50 group-hover:bg-sage/10 group-hover:text-sage"}`}>
+                        <item.icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      {isCurrent ? <span className="service-current-label">Hic es</span> : null}
+                    </div>
+                    <h3 className="mt-5 text-lg leading-snug">{item.title}</h3>
+                    <p className="mt-2.5 flex-1 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
+                    <span className="mt-6 inline-flex items-center gap-2 text-[0.68rem] font-semibold tracking-[0.16em] uppercase text-brass-soft">
+                      Singula vide
+                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+                    </span>
+                  </Link>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
